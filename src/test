@@ -1,0 +1,3 @@
+MOV ax, bx // comment
+NULL
+XOR bx, 6.23 - 3.43
