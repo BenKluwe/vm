@@ -1,3 +1,4 @@
 MOV ax, bx // comment
 NULL
-XOR bx, 6.23 - 3.43
+XOR bx, 6.23 -3.43 +6-2
+MOV ax + 2, bx

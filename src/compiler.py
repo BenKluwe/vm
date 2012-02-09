@@ -12,7 +12,7 @@ class lexer: # enum class to seperate instructions from operands etc.
 
 def readAssemblyTable():
 	table = []
-	assemblyTableFile = open('assembly_table.txt', 'r')
+	assemblyTableFile = open('lang.lf', 'r')
 
 	for line in assemblyTableFile:
 		line = line.upper().split(' ')
@@ -66,7 +66,7 @@ def assemble(code):
 	i=0
 	while i < len(code): # repeat until end of file
 		tmp=[]
-		while code[i][0] != lexer.END_STMNT: # get one line of file
+		while i < len(code) and code[i][0] != lexer.END_STMNT: # get one line of file
 			tmp.append(code[i])
 			i += 1
 
@@ -114,6 +114,7 @@ def destructline(code): # split complex instructions ) into seperate instruction
 
 	returnvar=[]
 	i=0
+	compacted=0
 	while i < len(code):
 		# when comming across an operator, convert into separate instructions
 		if code[i][0] == lexer.OPERATOR:
@@ -122,14 +123,15 @@ def destructline(code): # split complex instructions ) into seperate instruction
 			arg2 = code[i+1]
 			# number, operator, number results in cut down to one number
 			if arg1[0] == lexer.DIGIT and arg2[0] == lexer.DIGIT:
+				compacted=1
 				code=subassemblenumbers(code, i, arg1, arg2)
 		i+=1
-	# add end of line statement to separate commands
-	tmp=[]
-	tmp.append(lexer.END_STMNT)
-	tmp.append("END_STMNT")
-	code.append(tmp)
-
+	
+	if not compacted:
+		print("")
+		print("error, inforrect number of operands, exiting")
+		sys.exit()
+	
 	if debug: # debug information
 		print("exiting subassembly")
 		print("")
@@ -180,6 +182,12 @@ assemblyTable=readAssemblyTable()
 operandTable=[ ['ax',0x0001], ['bx', 0x0002], ['cx', 0x0004], ['dx', 0x0008], ['ex', 0x0010] ] # operand table
 file = open(sys.argv[1])
 tokens, remainder = scanner.scan(file.read())
+
+if debug: # debug information
+	print("entire code:")
+	print(tokens)
+	print("")
+
 tokens = assemble(tokens)
 print("final program in binary format (instructions separated by spaces: ")
 print(tokens)
