@@ -129,7 +129,7 @@ def destructline(code): # split complex instructions ) into seperate instruction
 	
 	if not compacted:
 		print("")
-		print("error, inforrect number of operands, exiting")
+		print("error, incorrect number of operands, exiting")
 		sys.exit()
 	
 	if debug: # debug information
